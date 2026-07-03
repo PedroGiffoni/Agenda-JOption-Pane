@@ -135,11 +135,32 @@ public class Agenda {
                         break;
                     }
 
+                    Pessoa pessoaExistente = null;
+
+                    for (Pessoa p : pessoas) {
+                        if (p.getTelefone().equals(telefone)) {
+                            pessoaExistente = p;
+                            break;
+                        }
+                    }
+
+                    if (pessoaExistente != null) {
+                        JOptionPane.showMessageDialog(
+                                null,
+                                "[Erro] Telefone já cadastrado!\n\n" +
+                                "Este telefone pertence ao contato:\n" +
+                                "Nome: " + pessoaExistente.getNome() + "\n" +
+                                "Idade: " + pessoaExistente.getIdade() + "\n" +
+                                "Telefone: " + pessoaExistente.getTelefone()
+                        );
+                        break;
+                    }
+
                     Pessoa pessoa = new Pessoa(nome, idade, telefone);
 
                     pessoas.add(pessoa);
                     repository.salvar(pessoas);
-
+                    
                     JOptionPane.showMessageDialog(
                             null,
                             "[Sucesso] Cadastro realizado com sucesso!\n\n" +

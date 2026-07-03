@@ -4,7 +4,12 @@
  */
 package br.com.giffoni.pedro.agenda;
 import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+
 
 /**
  *
@@ -33,7 +38,7 @@ public class PessoaRepository {
             leitor.close();
 
         } catch (FileNotFoundException e) {
-            // Arquivo ainda não existe. Não tem problema.
+           
         } catch (IOException e) {
             System.out.println("Erro ao carregar arquivo.");
         }
@@ -56,6 +61,19 @@ public class PessoaRepository {
         } catch (IOException e) {
             System.out.println("Erro ao salvar arquivo.");
         }
+    }
+    
+        public Pessoa buscarPorTelefone(String telefone){
+
+        for(Pessoa pessoa : carregar()){
+
+            if(pessoa.getTelefone().equals(telefone)){
+                return pessoa;
+            }
+
+        }
+
+        return null;
     }
     
     
