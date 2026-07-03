@@ -9,7 +9,7 @@ import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import br.com.giffoni.pedro.agenda.exceptions.TelefoneDuplicadoException;
 
 /**
  *
@@ -75,6 +75,23 @@ public class PessoaRepository {
 
         return null;
     }
+        public void salvarPessoa(Pessoa pessoa) throws TelefoneDuplicadoException {
+
+            ArrayList<Pessoa> pessoas = carregar();
+
+            Pessoa existente = buscarPorTelefone(pessoa.getTelefone());
+
+            if (existente != null) {
+                throw new TelefoneDuplicadoException(
+                        "Telefone já cadastrado para " + existente.getNome()
+                );
+            }
+
+            pessoas.add(pessoa);
+
+            salvar(pessoas);
+        }
+        
     
     
 }

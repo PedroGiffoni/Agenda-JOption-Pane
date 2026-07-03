@@ -6,6 +6,7 @@ package br.com.giffoni.pedro.agenda;
 
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import br.com.giffoni.pedro.agenda.exceptions.TelefoneDuplicadoException;
 
 /**
  *
@@ -56,52 +57,47 @@ public class Agenda {
         }
     }
 
-    public static void cadastrarPessoa(ArrayList<Pessoa> pessoas, PessoaRepository repository) {
+        public static void cadastrarPessoa(ArrayList<Pessoa> pessoas, PessoaRepository repository) {
 
-        String nome = pedirNome();
+            String nome = pedirNome();
 
-        if (nome == null) {
-            return;
-        }
+            if (nome == null) {
+                return;
+            }
 
-        Integer idade = pedirIdade();
+            Integer idade = pedirIdade();
 
-        if (idade == null) {
-            return;
-        }
+            if (idade == null) {
+                return;
+            }
 
-        String telefone = pedirTelefone();
+            String telefone = pedirTelefone();
 
-        if (telefone == null) {
-            return;
-        }
+            if (telefone == null) {
+                return;
+            }
 
-        Pessoa pessoaExistente = buscarPessoaPorTelefone(pessoas, telefone);
+            Pessoa pessoa = new Pessoa(nome, idade, telefone);
 
-        if (pessoaExistente != null) {
-            JOptionPane.showMessageDialog(
-                    null,
-                    "[Erro] Telefone já cadastrado!\n\n" +
-                    "Este telefone pertence ao contato:\n" +
-                    "Nome: " + pessoaExistente.getNome() + "\n" +
-                    "Idade: " + pessoaExistente.getIdade() + "\n" +
-                    "Telefone: " + pessoaExistente.getTelefone()
-            );
-            return;
-        }
+            try {
+                repository.salvarPessoa(pessoa);
 
-        Pessoa pessoa = new Pessoa(nome, idade, telefone);
+                pessoas.add(pessoa);
 
-        pessoas.add(pessoa);
-        repository.salvar(pessoas);
+                JOptionPane.showMessageDialog(
+                        null,
+                        "[Sucesso] Cadastro realizado com sucesso!\n\n" +
+                        "Nome: " + pessoa.getNome() + "\n" +
+                        "Idade: " + pessoa.getIdade() + "\n" +
+                        "Telefone: " + pessoa.getTelefone()
+                );
 
-        JOptionPane.showMessageDialog(
-                null,
-                "[Sucesso] Cadastro realizado com sucesso!\n\n" +
-                "Nome: " + pessoa.getNome() + "\n" +
-                "Idade: " + pessoa.getIdade() + "\n" +
-                "Telefone: " + pessoa.getTelefone()
-        );
+            } catch (TelefoneDuplicadoException e) {
+                JOptionPane.showMessageDialog(
+                        null,
+                        "[Erro] " + e.getMessage()
+                );
+            }
     }
 
     public static String pedirNome() {
@@ -189,16 +185,7 @@ public class Agenda {
         }
     }
 
-    public static Pessoa buscarPessoaPorTelefone(ArrayList<Pessoa> pessoas, String telefone) {
-
-        for (Pessoa pessoa : pessoas) {
-            if (pessoa.getTelefone().equals(telefone)) {
-                return pessoa;
-            }
-        }
-
-        return null;
-    }
+   
 
     public static void listarPessoas(ArrayList<Pessoa> pessoas) {
 
