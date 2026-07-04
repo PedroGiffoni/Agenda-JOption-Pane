@@ -321,7 +321,7 @@ Sempre que um erro ocorre, o usuário permanece na mesma etapa do cadastro até 
 Clone o repositório.
 
 ```bash
-git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
+git clone [https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git](https://github.com/PedroGiffoni/Agenda-JOption-Pane)
 ```
 
 Abra o projeto no Apache NetBeans.
