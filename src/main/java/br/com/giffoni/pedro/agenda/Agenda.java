@@ -47,11 +47,11 @@ public class Agenda {
 
                 case "3":
                     rodando = false;
-                    JOptionPane.showMessageDialog(null, "Programa encerrado.");
+                    JOptionPane.showMessageDialog(null,"Programa encerrado.",".:Agenda:.",JOptionPane.INFORMATION_MESSAGE);
                     break;
 
                 default:
-                    JOptionPane.showMessageDialog(null, "[Erro] Opção inválida.");
+                    JOptionPane.showMessageDialog(null,"Opção inválida.",".:Agenda:.",JOptionPane.ERROR_MESSAGE);
                     break;
             }
         }
@@ -194,7 +194,7 @@ public class Agenda {
             return;
         }
 
-        String lista = "..:: PESSOAS CADASTRADAS ::..\n\n";
+        String lista = "..:: LISTA DE CONTATOS ::..\n\n";
 
         for (Pessoa pessoa : pessoas) {
             lista += pessoa + "\n\n";
