@@ -2,7 +2,7 @@
 
 # 📒 Agenda de Cadastro de Pessoas
 
-### Sistema de Cadastro em Java utilizando POO, JOptionPane, ArrayList e Persistência em Arquivo
+### Sistema de Cadastro em Java utilizando POO, JOptionPane, ArrayList, Persistência em Arquivo e Exceções Personalizadas
 
 ![Java](https://img.shields.io/badge/Java-17+-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)
 ![NetBeans](https://img.shields.io/badge/Apache%20NetBeans-1B6AC6?style=for-the-badge&logo=apache-netbeans-ide&logoColor=white)
@@ -27,6 +27,7 @@ Projeto desenvolvido como desafio prático da disciplina de **Java**, aplicando 
 - Tratamento de exceções
 - Como executar
 - Melhorias futuras
+- Objetivos de aprendizagem
 - Autor
 
 ---
@@ -45,6 +46,8 @@ Os cadastros ficam armazenados em memória utilizando um **ArrayList** e também
 
 Toda a interação com o usuário é realizada através do **JOptionPane**, proporcionando uma interface gráfica simples e intuitiva.
 
+Além disso, o sistema utiliza uma **exceção personalizada** para impedir que dois contatos sejam cadastrados com o mesmo número de telefone, garantindo maior integridade aos dados.
+
 ---
 
 # 🚀 Funcionalidades
@@ -54,8 +57,10 @@ Toda a interação com o usuário é realizada através do **JOptionPane**, prop
 - ✅ Validação de nome
 - ✅ Validação de idade
 - ✅ Validação de telefone
+- ✅ Validação de telefone duplicado
 - ✅ Apenas maiores de idade podem ser cadastrados
 - ✅ Tratamento de exceções
+- ✅ Exceção personalizada (`TelefoneDuplicadoException`)
 - ✅ Armazenamento utilizando ArrayList
 - ✅ Persistência dos dados em arquivo texto
 - ✅ Leitura automática dos cadastros ao iniciar o programa
@@ -68,7 +73,7 @@ Toda a interação com o usuário é realizada através do **JOptionPane**, prop
 - Java
 - Apache NetBeans
 - JOptionPane
-- Programação Orientada a Objetos
+- Programação Orientada a Objetos (POO)
 - ArrayList
 - FileReader
 - FileWriter
@@ -83,7 +88,7 @@ Toda a interação com o usuário é realizada através do **JOptionPane**, prop
 
 Durante o desenvolvimento foram utilizados diversos conceitos importantes da linguagem Java.
 
-### Programação Orientada a Objetos
+## Programação Orientada a Objetos
 
 - Classes
 - Objetos
@@ -92,66 +97,43 @@ Durante o desenvolvimento foram utilizados diversos conceitos importantes da lin
 - Métodos
 - Sobrescrita do método `toString()`
 
-### Coleções
+## Coleções
 
 - ArrayList
 
-### Persistência
+## Persistência
 
 - Leitura de arquivos
 - Escrita de arquivos
-- Serialização simples utilizando arquivos texto
+- Persistência utilizando arquivo texto
 
-### Tratamento de Exceções
+## Tratamento de Exceções
 
 - try
 - catch
 - NumberFormatException
 - IOException
+- Exceções Personalizadas (Custom Exceptions)
+- TelefoneDuplicadoException
 
-### Organização do código
+## Organização do código
 
-Separação de responsabilidades utilizando uma estrutura semelhante ao padrão Repository.
+Separação de responsabilidades utilizando uma estrutura semelhante ao padrão **Repository**, deixando a lógica de persistência desacoplada da interface da aplicação.
 
 ---
 
 # 📂 Estrutura do projeto
 
-```
+```text
 src
 │
+├── Agenda.java
 ├── Pessoa.java
-│
 ├── PessoaRepository.java
 │
-└── Agenda.java
+└── exceptions
+    └── TelefoneDuplicadoException.java
 ```
-
-## Pessoa
-
-Classe responsável por representar uma pessoa cadastrada.
-
-Atributos:
-
-- Nome
-- Idade
-- Telefone
-
-Também é responsável por converter os dados para uma linha de arquivo e reconstruir um objeto a partir do arquivo.
-
----
-
-## PessoaRepository
-
-Responsável por toda a persistência dos dados.
-
-Funções:
-
-- Salvar cadastros
-- Ler cadastros
-- Manipular o arquivo texto
-
-Toda a comunicação com o arquivo fica isolada nesta classe.
 
 ---
 
@@ -163,9 +145,46 @@ Responsável por:
 
 - Exibir o menu
 - Receber os dados do usuário
-- Validar informações
-- Chamar o Repository
+- Chamar os métodos de cadastro
 - Listar os cadastros
+
+---
+
+## Pessoa
+
+Representa um contato cadastrado.
+
+Atributos:
+
+- Nome
+- Idade
+- Telefone
+
+Também é responsável por converter um objeto para o formato do arquivo (`toLinhaArquivo`) e reconstruir um objeto a partir do arquivo (`fromLinhaArquivo`).
+
+---
+
+## PessoaRepository
+
+Classe responsável pela persistência dos dados.
+
+Funções:
+
+- Ler o arquivo
+- Salvar o arquivo
+- Buscar contato por telefone
+- Validar telefone duplicado
+- Lançar exceções personalizadas
+
+Toda a comunicação com o arquivo fica centralizada nesta classe.
+
+---
+
+## TelefoneDuplicadoException
+
+Exceção personalizada criada para representar uma regra de negócio da aplicação.
+
+Sempre que um usuário tenta cadastrar um telefone já existente, essa exceção é lançada pelo Repository e tratada na classe Agenda, impedindo o cadastro duplicado.
 
 ---
 
@@ -189,33 +208,42 @@ Durante o cadastro são solicitados:
 
 Cada informação passa por validações antes de ser salva.
 
+---
+
 ### Nome
 
+Regras:
+
 - Obrigatório
-- Não aceita números
-- Não aceita caracteres especiais
+- Apenas letras
+- Aceita acentos
+- Aceita espaços
 
 Exemplos válidos
 
 ```
 Pedro
-João Silva
 Maria Fernanda
+João Antônio
 ```
 
 ---
 
 ### Idade
 
+Regras:
+
 - Obrigatória
-- Deve conter apenas números
-- Apenas maiores de idade são cadastrados
+- Apenas números
+- Apenas maiores de idade podem ser cadastrados
 
 Caso seja informado um valor inválido, o sistema solicita novamente a idade.
 
 ---
 
 ### Telefone
+
+Regras:
 
 - Obrigatório
 - Apenas números
@@ -225,6 +253,27 @@ Exemplo
 
 ```
 85999998888
+```
+
+---
+
+### Telefone duplicado
+
+Antes de salvar um novo cadastro, o sistema verifica se o telefone informado já existe.
+
+Caso o número esteja cadastrado, a exceção personalizada `TelefoneDuplicadoException` é lançada pelo Repository.
+
+A aplicação impede o cadastro e informa ao usuário qual contato já possui aquele número.
+
+Exemplo:
+
+```
+[Erro]
+
+Telefone já cadastrado!
+
+Nome: Pedro Toni Melo
+Telefone: 85999998888
 ```
 
 ---
@@ -241,13 +290,15 @@ Maria;25;85988887777
 José;41;85977776666
 ```
 
-Ao iniciar novamente o programa, o arquivo é lido automaticamente e todos os cadastros são carregados para o ArrayList.
+Ao iniciar novamente o programa, o arquivo é lido automaticamente e todos os registros são carregados novamente para o `ArrayList`.
 
 ---
 
 # ⚠ Tratamento de exceções
 
-O sistema trata diversas situações de erro, como:
+O sistema trata diversas situações de erro.
+
+Validações implementadas:
 
 - Nome vazio
 - Nome contendo números
@@ -256,7 +307,10 @@ O sistema trata diversas situações de erro, como:
 - Telefone vazio
 - Telefone contendo letras
 - Telefone com quantidade incorreta de dígitos
+- Telefone já cadastrado
 - Opção inválida do menu
+
+Além das exceções nativas da linguagem (`NumberFormatException` e `IOException`), foi criada uma exceção personalizada (`TelefoneDuplicadoException`) para representar uma regra de negócio específica da aplicação.
 
 Sempre que um erro ocorre, o usuário permanece na mesma etapa do cadastro até informar um valor válido.
 
@@ -264,7 +318,7 @@ Sempre que um erro ocorre, o usuário permanece na mesma etapa do cadastro até 
 
 # ▶ Como executar
 
-Clone o repositório
+Clone o repositório.
 
 ```bash
 git clone https://github.com/SEU-USUARIO/SEU-REPOSITORIO.git
@@ -284,14 +338,14 @@ O arquivo de persistência será criado automaticamente após o primeiro cadastr
 
 # 🔮 Melhorias futuras
 
-Algumas melhorias que podem ser implementadas futuramente:
+Algumas funcionalidades que podem ser ser implementadas futuramente:
 
 - Editar cadastro
 - Excluir cadastro
 - Buscar pessoa pelo nome
 - Buscar por telefone
 - Ordenação alfabética
-- Interface gráfica em JavaFX
+- Interface gráfica utilizando JavaFX
 - Persistência utilizando banco de dados
 - Exportação para CSV
 - Cadastro com CPF
@@ -299,6 +353,7 @@ Algumas melhorias que podem ser implementadas futuramente:
 - Máscara para telefone
 - Máscara para CPF
 - Sistema de login
+- Integração com banco de dados MySQL
 
 ---
 
@@ -309,11 +364,16 @@ Este projeto foi desenvolvido com o objetivo de praticar:
 - Programação Orientada a Objetos
 - Estruturas de repetição
 - Estruturas de decisão
+- Métodos
+- Encapsulamento
 - Tratamento de exceções
+- Exceções personalizadas (Custom Exceptions)
 - Manipulação de arquivos
 - Coleções
+- Persistência de dados
 - Organização de código
 - Separação de responsabilidades
+- Repository Pattern
 - Versionamento com Git
 - Publicação de projetos no GitHub
 
@@ -325,7 +385,7 @@ Este projeto foi desenvolvido com o objetivo de praticar:
 
 Estudante de Análise e Desenvolvimento de Sistemas.
 
-Apaixonado por tecnologia, desenvolvimento de software, Inteligência Artificial e Visão Computacional, buscando aplicar boas práticas de programação na construção de projetos cada vez mais completos.
+Apaixonado por tecnologia, desenvolvimento de software, Inteligência Artificial e Visão Computacional, buscando aplicar boas práticas de programação e arquitetura de software na construção de projetos cada vez mais completos.
 
 ---
 
